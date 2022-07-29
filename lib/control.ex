@@ -7,7 +7,7 @@ defmodule TestedCell.Control do
   use Agent
 
   def start_link(_opts) do
-    Agent.start_link(fn -> %{display_editors: true, max_attempts: 3} end, name: __MODULE__)
+    Agent.start_link(fn -> %{display_editors: false, max_attempts: 3} end, name: __MODULE__)
   end
 
   @doc """
@@ -30,16 +30,16 @@ defmodule TestedCell.Control do
   end
 
   @doc """
-  Hide text editors
+  Show text editors
 
   ## Examples
 
-    iex> TestedCell.Control.hide_editors()
+    iex> TestedCell.Control.show_editors()
     iex> TestedCell.Control.editors_enabled?()
-    false
+    true
   """
-  def hide_editors do
-    Agent.update(__MODULE__, fn state -> Map.put(state, :display_editors, false) end)
+  def show_editors do
+    Agent.update(__MODULE__, fn state -> Map.put(state, :display_editors, true) end)
   end
 
   @doc """
