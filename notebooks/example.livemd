@@ -7,8 +7,7 @@ Install the `TestedCell` project using [Mix Install](https://hexdocs.pm/mix/1.12
 We've put it below for demonstration purposes.
 
 ```elixir
-# Mix.install([{:tested_cell, github: "BrooklinJazz/tested_cell"}])
-Mix.install([{:tested_cell, path: "."}])
+Mix.install([{:tested_cell, github: "BrooklinJazz/tested_cell"}])
 ```
 
 ## Configuration
@@ -33,7 +32,7 @@ This creates a `TestedCell` like the one below. Here you can write [ExUnit](http
 
 You may also write a **Solution** that will appear after a certain number of failed attempts.
 
-<!-- livebook:{"attrs":{"assertions":"assert my_int == 1","code":"my_int = nil","solution":"my_int = 1"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":{"assertions":"assert Math.double(2) == 4\nassert Math.double(4) == 8","code":"defmodule Math do\r\n  def double(int) do\r\n    int + 2\r\n  end\r\nend","solution":"defmodule Math do\n  def double(int) do\n    int * 2\n  end\nend"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 ExUnit.start(auto_run: false)
@@ -42,8 +41,14 @@ defmodule Assertion do
   use ExUnit.Case
 
   test "" do
-    my_int = nil
-    assert my_int == 1
+    defmodule Math do
+      def double(int) do
+        int + 2
+      end
+    end
+
+    assert Math.double(2) == 4
+    assert Math.double(4) == 8
   end
 end
 
@@ -51,7 +56,11 @@ ExUnit.run()
 
 # Make variables and modules defined in the test available.
 # Also allows for exploration using the output of the cell.
-my_int = nil
+defmodule Math do
+  def double(int) do
+    int + 2
+  end
+end
 ```
 
 `TestedCell` does not display the solution if it is empty.
