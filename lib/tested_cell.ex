@@ -64,33 +64,12 @@ defmodule TestedCell do
   def handle_info(:attempt, ctx) do
     ExUnit.start(auto_run: false)
 
-    {%{failures: failures}, _} =
-      """
-      defmodule Attempt do
-        use ExUnit.Case
-
-        @tag capture_log: false
-        test "check attempt" do
-          #{ctx.assigns["code"]}
-          #{ctx.assigns["assertions"]}
-        end
-      end
-
-      ExUnit.run() |> IO.inspect(label: "TESTS")
-      """
-      |> Code.eval_string()
-
-    failed = failures >= 0
     # attempts start at 1, so we subtract 1
     if ctx.assigns.attempts - 1 >= TestedCell.Control.max_attempts() do
       broadcast_event(ctx, "display_solution", %{solution: ctx.assigns.solution})
     end
 
-    if failed do
-      {:noreply, assign(ctx, attempts: ctx.assigns.attempts + 1)}
-    else
-      {:noreply, ctx}
-    end
+    {:noreply, assign(ctx, attempts: ctx.assigns.attempts + 1)}
   end
 
   # persist the assertions and solution

@@ -56,7 +56,7 @@ my_int = nil
 
 `TestedCell` does not display the solution if it empty.
 
-<!-- livebook:{"attrs":{"assertions":"assert author == \"Patrick Rothfuss\"","code":"author =  \"Patrick Rothfuss\"","solution":""},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":{"assertions":"assert author == \"Patrick Rothfuss\"\nProcess.sleep(1000)\nassert false","code":"author =  \"Patrick Rothfuss\"","solution":"2 + 2"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 ExUnit.start(auto_run: false)
@@ -67,6 +67,8 @@ defmodule Assertion do
   test "" do
     author = "Patrick Rothfuss"
     assert author == "Patrick Rothfuss"
+    Process.sleep(1000)
+    assert false
   end
 end
 
