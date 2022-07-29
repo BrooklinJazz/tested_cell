@@ -1,21 +1,15 @@
 # TestedCell
 
-**TODO: Add description**
+A Tested Kino SmartCell for Livebook
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `tested_cell` to your list of dependencies in `mix.exs`:
+Add the dependency in your Livebook setup section.
 
 ```elixir
-def deps do
-  [
-    {:tested_cell, "~> 0.1.0"}
-  ]
-end
+Mix.install([{:tested_cell, github: "https://github.com/BrooklinJazz/tested_cell"}])
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/tested_cell>.
+## Usage
 
+Run [notebooks/example.livemd](https://github.com/BrooklinJazz/tested_cell/blob/main/notebooks/example.livemd) in Livebook for practical examples.

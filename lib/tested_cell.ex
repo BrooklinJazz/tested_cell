@@ -62,8 +62,9 @@ defmodule TestedCell do
 
   @impl true
   def handle_info(:attempt, ctx) do
-    if ctx.assigns.attempts >= TestedCell.Control.max_attempts() do
-      broadcast_event(ctx, "display_solution", %{})
+    # attempts start at 1, so we subtract 1
+    if ctx.assigns.attempts - 1 >= TestedCell.Control.max_attempts() do
+      broadcast_event(ctx, "display_solution", %{solution: ctx.assigns.solution})
     end
 
     {:noreply, assign(ctx, attempts: ctx.assigns.attempts + 1)}

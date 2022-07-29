@@ -7,7 +7,7 @@ Install the `TestedCell` project using [Mix Install](https://hexdocs.pm/mix/1.12
 We've put it below for demonstration purposes.
 
 ```elixir
-Mix.install([{:tested_cell, github: ""}])
+Mix.install([{:tested_cell, github: "https://github.com/BrooklinJazz/tested_cell"}])
 ```
 
 ## Configuration
@@ -43,7 +43,6 @@ defmodule Assertion do
   test "" do
     my_int = nil
     assert my_int == 1
-    assert false
   end
 end
 
@@ -52,4 +51,31 @@ ExUnit.run()
 # Make variables and modules defined in the test available.
 # Also allows for exploration using the output of the cell.
 my_int = nil
+```
+
+`TestedCell` does not display the solution if it empty.
+
+<!-- livebook:{"attrs":{"assertions":"assert author == \"Patrick Rothfuss\"","code":"author =  \"Patrick Rothfuss\"","solution":""},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule Assertion do
+  use ExUnit.Case
+
+  test "" do
+    author = "Patrick Rothfuss"
+    assert author == "Patrick Rothfuss"
+  end
+end
+
+ExUnit.run()
+
+# Make variables and modules defined in the test available.
+# Also allows for exploration using the output of the cell.
+author = "Patrick Rothfuss"
+```
+
+```elixir
+
 ```
