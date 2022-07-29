@@ -1,6 +1,8 @@
 # TestedCell
 
-A Tested Kino SmartCell for Livebook
+A Tested Kino SmartCell for Livebook.
+
+Run tests on an Elixir Cell without revealing the tests or writing a significant amount of ExUnit boilerplate.
 
 ## Installation
 
