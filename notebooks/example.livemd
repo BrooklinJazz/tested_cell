@@ -1,0 +1,55 @@
+# Tested Cell
+
+## Installation
+
+Install the `TestedCell` project using [Mix Install](https://hexdocs.pm/mix/1.12.3/Mix.html#install/2). Typically this belongs in the setup section at the top of every livebook.
+
+We've put it below for demonstration purposes.
+
+```elixir
+Mix.install([{:tested_cell, github: ""}])
+```
+
+## Configuration
+
+The `TestedCell.Control` module configures the `TestedCell`. We can set whether or not we should display the assertion and hint editor. This should be done in the setup section of the livebook.
+
+Disconnect and Reconnect the livebook in **Runtime Settings** or press the `00` keybinding to pick up these changes.
+
+```elixir
+# TestedCell.Control.hide_editors()
+```
+
+```elixir
+# TestedCell.Control.set_max_attempts(5)
+```
+
+## Usage
+
+Click the **+ Smart** button to see the smart cells available in the livebook and select **Tested Cell**.
+
+This creates a `TestedCell` like the one below. Here you can write [ExUnit](https://hexdocs.pm/ex_unit/1.12/ExUnit.html) style assertions.
+
+You may also write a **Solution** that will appear after a certain number of failed attempts.
+
+<!-- livebook:{"attrs":{"assertions":"assert my_int == 1","code":"my_int = nil","solution":"my_int = 1"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule Assertion do
+  use ExUnit.Case
+
+  test "" do
+    my_int = nil
+    assert my_int == 1
+    assert false
+  end
+end
+
+ExUnit.run()
+
+# Make variables and modules defined in the test available.
+# Also allows for exploration using the output of the cell.
+my_int = nil
+```
