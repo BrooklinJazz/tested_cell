@@ -24,7 +24,7 @@ defmodule TestedCell.MixProject do
     [
       {:makeup, "~> 1.1.0"},
       {:makeup_elixir, "~> 0.16.0"},
-      {:kino, github: "livebook-dev/kino", override: true}
+      {:kino, "~> 0.6.2"}
     ]
   end
 end
