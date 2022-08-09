@@ -9,7 +9,7 @@ Run tests on an Elixir Cell without revealing the tests or writing a significant
 Add the dependency in your Livebook setup section.
 
 ```elixir
-Mix.install([{:tested_cell, github: "https://github.com/BrooklinJazz/tested_cell"}])
+Mix.install([{:tested_cell, git: "https://github.com/BrooklinJazz/tested_cell"}])
 ```
 
 ## Usage

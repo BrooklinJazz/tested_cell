@@ -17,7 +17,7 @@ The `TestedCell.Control` module configures the `TestedCell`. We can set whether 
 Disconnect and Reconnect the livebook in **Runtime Settings** or press the `00` keybinding to pick up these changes.
 
 ```elixir
-# TestedCell.Control.hide_editors()
+# TestedCell.Control.show_editors()
 ```
 
 ```elixir
