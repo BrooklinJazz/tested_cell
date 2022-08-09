@@ -2,8 +2,6 @@
 
 ```elixir
 Mix.install([{:kino, "~> 0.6.2"}, {:tested_cell, path: "."}])
-
-TestedCell.Control.display_editors()
 ```
 
 ## Installation
@@ -13,7 +11,7 @@ Install the `TestedCell` project using [Mix Install](https://hexdocs.pm/mix/1.12
 <!-- livebook:{"force_markdown":true} -->
 
 ```elixir
-Mix.install([{:kino, "~> 0.6.2"}, {:tested_cell, path: "."}])
+Mix.install([{:kino, "~> 0.6.2"}, {:tested_cell, github: "BrooklinJazz/tested_cell"}])
 ```
 
 ## Configuration
