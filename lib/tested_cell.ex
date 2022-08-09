@@ -5,7 +5,17 @@ defmodule TestedCell do
 
   @max_attempts 3
 
-  def display_editors(display \\ true) do
+  @doc """
+  Show Tested Cell Editors
+  """
+  def show, do: display_editors(true)
+
+  @doc """
+  Hide Tested Cell Editors
+  """
+  def hide, do: display_editors(false)
+
+  defp display_editors(display) do
     Registry.dispatch(TestedCell.CellRegistry, :tested_cells, fn entries ->
       Enum.each(entries, fn {pid, _} -> send(pid, {:display_editors, display}) end)
     end)

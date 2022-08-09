@@ -18,16 +18,16 @@ Mix.install([{:kino, "~> 0.6.2"}, {:tested_cell, path: "."}])
 
 ## Configuration
 
-We can display editors by calling `TestedCell.display_editors/1`. Editors are hidden by default.
+We can display editors by calling `TestedCell.show/1`. Editors are hidden by default.
 
 ```elixir
-# Hide Editors
-TestedCell.display_editors(false)
+TestedCell.show()
+```
 
-# Display Editors
-# true by default
-TestedCell.display_editors()
-TestedCell.display_editors(true)
+We can hide editors by calling `TestedCell.hide/1`. Editors are hidden by default.
+
+```elixir
+TestedCell.hide()
 ```
 
 ## Usage
