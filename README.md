@@ -9,7 +9,7 @@ Run tests on an Elixir Cell without revealing the tests or writing a significant
 Add the dependency in your Livebook setup section. This project relies on [Kino](https://github.com/livebook-dev/kino).
 
 ```elixir
-Mix.install([{:kino, "~> 0.6.2"}, {:tested_cell, git: "https://github.com/BrooklinJazz/tested_cell"}])
+Mix.install([{:kino, "~> 0.6.2"}, {:tested_cell, github: "BrooklinJazz/tested_cell"}])
 ```
 
 ## Usage
