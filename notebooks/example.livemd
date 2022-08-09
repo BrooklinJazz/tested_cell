@@ -1,27 +1,33 @@
 # Tested Cell
 
+```elixir
+Mix.install([{:kino, "~> 0.6.2"}, {:tested_cell, path: "."}])
+
+TestedCell.Control.display_editors()
+```
+
 ## Installation
 
-Install the `TestedCell` project using [Mix Install](https://hexdocs.pm/mix/1.12.3/Mix.html#install/2). Typically this belongs in the setup section at the top of every livebook.
+Install the `TestedCell` project using [Mix Install](https://hexdocs.pm/mix/1.12.3/Mix.html#install/2). Typically this belongs in the setup section at the top of every livebook. `TestedCell` relies on the `:kino` project.
 
-We've put it below for demonstration purposes.
+<!-- livebook:{"force_markdown":true} -->
 
 ```elixir
-Mix.install([{:tested_cell, github: "BrooklinJazz/tested_cell"}])
+Mix.install([{:kino, "~> 0.6.2"}, {:tested_cell, path: "."}])
 ```
 
 ## Configuration
 
-The `TestedCell.Control` module configures the `TestedCell`. We can set whether or not we should display the assertion and hint editor. This should be done in the setup section of the livebook.
-
-Disconnect and Reconnect the livebook in **Runtime Settings** or press the `00` keybinding to pick up these changes.
+We can display editors by calling `TestedCell.display_editors/1`. Editors are hidden by default.
 
 ```elixir
-# TestedCell.Control.show_editors()
-```
+# Hide Editors
+TestedCell.display_editors(false)
 
-```elixir
-# TestedCell.Control.set_max_attempts(5)
+# Display Editors
+# true by default
+TestedCell.display_editors()
+TestedCell.display_editors(true)
 ```
 
 ## Usage

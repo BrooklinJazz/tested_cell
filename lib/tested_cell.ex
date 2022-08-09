@@ -3,8 +3,17 @@ defmodule TestedCell do
   use Kino.JS.Live
   use Kino.SmartCell, name: "Tested Cell"
 
+  @max_attempts 3
+
+  def display_editors(display \\ true) do
+    Registry.dispatch(TestedCell.CellRegistry, :tested_cells, fn entries ->
+      Enum.each(entries, fn {pid, _} -> send(pid, {:display_editors, display}) end)
+    end)
+  end
+
   @impl true
   def init(attrs, ctx) do
+    Registry.register(TestedCell.CellRegistry, :tested_cells, nil)
     assertions = attrs["assertions"] || ""
     solution = attrs["solution"] || ""
     default_source = attrs["default_source"] || ""
@@ -14,7 +23,7 @@ defmodule TestedCell do
        assertions: assertions,
        solution: solution,
        attempts: 0,
-       display_editors: TestedCell.Control.editors_enabled?()
+       display_editors: false
      ),
      editor: [
        attribute: "code",
@@ -62,14 +71,19 @@ defmodule TestedCell do
 
   @impl true
   def handle_info(:attempt, ctx) do
-    ExUnit.start(auto_run: false)
-
     # attempts start at 1, so we subtract 1
-    if ctx.assigns.attempts - 1 >= TestedCell.Control.max_attempts() do
+    if ctx.assigns.attempts - 1 >= @max_attempts do
       broadcast_event(ctx, "display_solution", %{solution: ctx.assigns.solution})
     end
 
     {:noreply, assign(ctx, attempts: ctx.assigns.attempts + 1)}
+  end
+
+  @impl true
+  def handle_info({:display_editors, display}, ctx) do
+    broadcast_event(ctx, "display_editors", %{display: display})
+
+    {:noreply, ctx}
   end
 
   # persist the assertions and solution

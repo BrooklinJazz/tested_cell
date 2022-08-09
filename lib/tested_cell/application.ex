@@ -8,8 +8,7 @@ defmodule TestedCell.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      {TestedCell.Control, []},
-      {Task.Supervisor, name: TestedCell.TaskSupervisor}
+      {Registry, [keys: :duplicate, name: TestedCell.CellRegistry]}
     ]
 
     Kino.SmartCell.register(TestedCell)
