@@ -14,29 +14,17 @@ Install the `TestedCell` project using [Mix Install](https://hexdocs.pm/mix/1.12
 Mix.install([{:kino, "~> 0.6.2"}, {:tested_cell, github: "BrooklinJazz/tested_cell"}])
 ```
 
-## Configuration
-
-We can display editors by calling `TestedCell.show/1`. Editors are hidden by default.
-
-```elixir
-TestedCell.show()
-```
-
-We can hide editors by calling `TestedCell.hide/1`. Editors are hidden by default.
-
-```elixir
-TestedCell.hide()
-```
-
 ## Usage
 
 Click the **+ Smart** button to see the smart cells available in the livebook and select **Tested Cell**.
 
-This creates a `TestedCell` like the one below. Here you can write [ExUnit](https://hexdocs.pm/ex_unit/1.12/ExUnit.html) style assertions.
+This creates a `TestedCell` like the one below. Double click the title **Exercise** to edit the title, assertions, and solution.
 
-You may also write a **Solution** that will appear after a certain number of failed attempts.
+In the **Assertions** you can write [ExUnit](https://hexdocs.pm/ex_unit/1.12/ExUnit.html) style assertions.
 
-<!-- livebook:{"attrs":{"assertions":"assert Math.double(2) == 4\nassert Math.double(4) == 8","code":"defmodule Math do\r\n  def double(int) do\r\n    int + 2\r\n  end\r\nend","solution":"defmodule Math do\n  def double(int) do\n    int * 2\n  end\nend"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
+The **Solution** will appear after `3` failed attempts.
+
+<!-- livebook:{"attrs":{"assertions":"assert Math.double(2) == 4\nassert Math.double(4) == 8","attempts":5,"code":"defmodule Math do\r\n  def double(int) do\r\n    int + 2\r\n  end\r\nend","solution":"defmodule Math do\n    def double(int) do\n      int * 2\n    end\nend","title":"Exercise"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 ExUnit.start(auto_run: false)
@@ -44,15 +32,60 @@ ExUnit.start(auto_run: false)
 defmodule Assertion do
   use ExUnit.Case
 
-  test "" do
-    defmodule Math do
-      def double(int) do
-        int + 2
-      end
-    end
+  test "Exercise" do
+    try do
+      Process.flag(:trap_exit, true)
 
-    assert Math.double(2) == 4
-    assert Math.double(4) == 8
+      defmodule Math do
+        def double(int) do
+          int + 2
+        end
+      end
+
+      assert Math.double(2) == 4
+      assert Math.double(4) == 8
+    catch
+      error ->
+        flunk("""
+          Your solution threw the following error:
+
+          #{inspect(error)}
+        """)
+
+      :exit, {error, {GenServer, message_type, [_pid, message, _timeout]}} ->
+        flunk("""
+            GenServer crashed with the following error:
+
+            #{inspect(error)}
+
+            When it recieved: #{inspect(message)} #{message_type}
+
+            Likely you need to define the corresponding handler for #{inspect(message)}.
+
+            Ensure you defined a `handle_call/3`, `handle_info/2`, or `handle_cast/2` or appropriate handler function.
+
+              def handle_call(:message, _from, state) do
+                ...
+              end
+
+            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
+
+              GenServer.call(pid, :message)
+        """)
+
+      :exit, error ->
+        flunk("""
+          Unhandled exit with the following error:
+
+          #{inspect(error)}
+        """)
+    after
+      # all warnings and errors are printed to the previous Kino Frame
+      # to avoid cluttering the test results display.
+      Process.sleep(10)
+      Kino.render(Kino.Markdown.new("### Test Results 
+<hr/>"))
+    end
   end
 end
 
@@ -60,6 +93,7 @@ ExUnit.run()
 
 # Make variables and modules defined in the test available.
 # Also allows for exploration using the output of the cell.
+# Unfortunately, this results in duplication of warnings.
 defmodule Math do
   def double(int) do
     int + 2
@@ -67,9 +101,9 @@ defmodule Math do
 end
 ```
 
-`TestedCell` does not display the solution if it is empty.
+`TestedCell` does not show the solution if it is empty.
 
-<!-- livebook:{"attrs":{"assertions":"assert author == \"Patrick Rothfuss\"","code":"author =  nil","solution":""},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":{"assertions":"assert author == \"Patrick Rothfuss\"","attempts":1,"code":"author = nil\r\ntest = nil","solution":"","title":"Exercise"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 ExUnit.start(auto_run: false)
@@ -77,9 +111,54 @@ ExUnit.start(auto_run: false)
 defmodule Assertion do
   use ExUnit.Case
 
-  test "" do
-    author = nil
-    assert author == "Patrick Rothfuss"
+  test "Exercise" do
+    try do
+      Process.flag(:trap_exit, true)
+      author = nil
+      test = nil
+      assert author == "Patrick Rothfuss"
+    catch
+      error ->
+        flunk("""
+          Your solution threw the following error:
+
+          #{inspect(error)}
+        """)
+
+      :exit, {error, {GenServer, message_type, [_pid, message, _timeout]}} ->
+        flunk("""
+            GenServer crashed with the following error:
+
+            #{inspect(error)}
+
+            When it recieved: #{inspect(message)} #{message_type}
+
+            Likely you need to define the corresponding handler for #{inspect(message)}.
+
+            Ensure you defined a `handle_call/3`, `handle_info/2`, or `handle_cast/2` or appropriate handler function.
+
+              def handle_call(:message, _from, state) do
+                ...
+              end
+
+            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
+
+              GenServer.call(pid, :message)
+        """)
+
+      :exit, error ->
+        flunk("""
+          Unhandled exit with the following error:
+
+          #{inspect(error)}
+        """)
+    after
+      # all warnings and errors are printed to the previous Kino Frame
+      # to avoid cluttering the test results display.
+      Process.sleep(10)
+      Kino.render(Kino.Markdown.new("### Test Results 
+<hr/>"))
+    end
   end
 end
 
@@ -87,5 +166,317 @@ ExUnit.run()
 
 # Make variables and modules defined in the test available.
 # Also allows for exploration using the output of the cell.
+# Unfortunately, this results in duplication of warnings.
 author = nil
+test = nil
+```
+
+## Warnings
+
+Unfortunately, in order to provide access to code defined inside of the `TestedCell`, we have to evaluate the code inside of the test, and outside of the test. This results in duplicating warning messages.
+
+<!-- livebook:{"attrs":{"assertions":"assert author == nil\n","attempts":1,"code":"author = nil\r\ntest = nil\r\n\r\ndefmodule UnusedWarning do\r\n  def has(unused_variable) do\r\n    2 + 2\r\n  end\r\nend","solution":"","title":"Exercise"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule Assertion do
+  use ExUnit.Case
+
+  test "Exercise" do
+    try do
+      Process.flag(:trap_exit, true)
+      author = nil
+      test = nil
+
+      defmodule UnusedWarning do
+        def has(unused_variable) do
+          2 + 2
+        end
+      end
+
+      assert author == nil
+    catch
+      error ->
+        flunk("""
+          Your solution threw the following error:
+
+          #{inspect(error)}
+        """)
+
+      :exit, {error, {GenServer, message_type, [_pid, message, _timeout]}} ->
+        flunk("""
+            GenServer crashed with the following error:
+
+            #{inspect(error)}
+
+            When it recieved: #{inspect(message)} #{message_type}
+
+            Likely you need to define the corresponding handler for #{inspect(message)}.
+
+            Ensure you defined a `handle_call/3`, `handle_info/2`, or `handle_cast/2` or appropriate handler function.
+
+              def handle_call(:message, _from, state) do
+                ...
+              end
+
+            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
+
+              GenServer.call(pid, :message)
+        """)
+
+      :exit, error ->
+        flunk("""
+          Unhandled exit with the following error:
+
+          #{inspect(error)}
+        """)
+    after
+      # all warnings and errors are printed to the previous Kino Frame
+      # to avoid cluttering the test results display.
+      Process.sleep(10)
+      Kino.render(Kino.Markdown.new("### Test Results 
+<hr/>"))
+    end
+  end
+end
+
+ExUnit.run()
+
+# Make variables and modules defined in the test available.
+# Also allows for exploration using the output of the cell.
+# Unfortunately, this results in duplication of warnings.
+author = nil
+test = nil
+
+defmodule UnusedWarning do
+  def has(unused_variable) do
+    2 + 2
+  end
+end
+```
+
+## Error Handling
+
+TestedCell catches crashes and exits to print the error nicely.
+
+<!-- livebook:{"attrs":{"assertions":"","attempts":1,"code":"throw \"Generic Throw\"","solution":"","title":"Exercise Example"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule Assertion do
+  use ExUnit.Case
+
+  test "Exercise Example" do
+    try do
+      Process.flag(:trap_exit, true)
+      throw("Generic Throw")
+    catch
+      error ->
+        flunk("""
+          Your solution threw the following error:
+
+          #{inspect(error)}
+        """)
+
+      :exit, {error, {GenServer, message_type, [_pid, message, _timeout]}} ->
+        flunk("""
+            GenServer crashed with the following error:
+
+            #{inspect(error)}
+
+            When it recieved: #{inspect(message)} #{message_type}
+
+            Likely you need to define the corresponding handler for #{inspect(message)}.
+
+            Ensure you defined a `handle_call/3`, `handle_info/2`, or `handle_cast/2` or appropriate handler function.
+
+              def handle_call(:message, _from, state) do
+                ...
+              end
+
+            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
+
+              GenServer.call(pid, :message)
+        """)
+
+      :exit, error ->
+        flunk("""
+          Unhandled exit with the following error:
+
+          #{inspect(error)}
+        """)
+    after
+      # all warnings and errors are printed to the previous Kino Frame
+      # to avoid cluttering the test results display.
+      Process.sleep(10)
+      Kino.render(Kino.Markdown.new("### Test Results 
+<hr/>"))
+    end
+  end
+end
+
+ExUnit.run()
+
+# Make variables and modules defined in the test available.
+# Also allows for exploration using the output of the cell.
+# Unfortunately, this results in duplication of warnings.
+throw("Generic Throw")
+```
+
+<!-- livebook:{"attrs":{"assertions":"{:ok, pid} = Server.start_link([])\n\nassert GenServer.call(pid, :NOTHING) == :green","attempts":1,"code":"raise \"Generic Raise\"","solution":"","title":"Exercise"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule Assertion do
+  use ExUnit.Case
+
+  test "Exercise" do
+    try do
+      Process.flag(:trap_exit, true)
+      raise "Generic Raise"
+      {:ok, pid} = Server.start_link([])
+
+      assert GenServer.call(pid, :NOTHING) == :green
+    catch
+      error ->
+        flunk("""
+          Your solution threw the following error:
+
+          #{inspect(error)}
+        """)
+
+      :exit, {error, {GenServer, message_type, [_pid, message, _timeout]}} ->
+        flunk("""
+            GenServer crashed with the following error:
+
+            #{inspect(error)}
+
+            When it recieved: #{inspect(message)} #{message_type}
+
+            Likely you need to define the corresponding handler for #{inspect(message)}.
+
+            Ensure you defined a `handle_call/3`, `handle_info/2`, or `handle_cast/2` or appropriate handler function.
+
+              def handle_call(:message, _from, state) do
+                ...
+              end
+
+            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
+
+              GenServer.call(pid, :message)
+        """)
+
+      :exit, error ->
+        flunk("""
+          Unhandled exit with the following error:
+
+          #{inspect(error)}
+        """)
+    after
+      # all warnings and errors are printed to the previous Kino Frame
+      # to avoid cluttering the test results display.
+      Process.sleep(10)
+      Kino.render(Kino.Markdown.new("### Test Results 
+<hr/>"))
+    end
+  end
+end
+
+ExUnit.run()
+
+# Make variables and modules defined in the test available.
+# Also allows for exploration using the output of the cell.
+# Unfortunately, this results in duplication of warnings.
+raise "Generic Raise"
+```
+
+We try to provide helpful hints to debug the error. We also separate the error from the test results to make the test results easier to read.
+
+<!-- livebook:{"attrs":{"assertions":"{:ok, pid} = Server.start_link([])\n\nGenServer.call(pid, :unhandled_message)","attempts":1,"code":"defmodule Server do\r\n  def start_link(opts) do\r\n    GenServer.start_link(__MODULE__, :green, opts)\r\n  end\r\n\r\n  def init(state) do\r\n    {:ok, state}\r\n  end\r\nend","solution":"","title":"Exercise"},"kind":"Elixir.TestedCell","livebook_object":"smart_cell"} -->
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule Assertion do
+  use ExUnit.Case
+
+  test "Exercise" do
+    try do
+      Process.flag(:trap_exit, true)
+
+      defmodule Server do
+        def start_link(opts) do
+          GenServer.start_link(__MODULE__, :green, opts)
+        end
+
+        def init(state) do
+          {:ok, state}
+        end
+      end
+
+      {:ok, pid} = Server.start_link([])
+
+      GenServer.call(pid, :unhandled_message)
+    catch
+      error ->
+        flunk("""
+          Your solution threw the following error:
+
+          #{inspect(error)}
+        """)
+
+      :exit, {error, {GenServer, message_type, [_pid, message, _timeout]}} ->
+        flunk("""
+            GenServer crashed with the following error:
+
+            #{inspect(error)}
+
+            When it recieved: #{inspect(message)} #{message_type}
+
+            Likely you need to define the corresponding handler for #{inspect(message)}.
+
+            Ensure you defined a `handle_call/3`, `handle_info/2`, or `handle_cast/2` or appropriate handler function.
+
+              def handle_call(:message, _from, state) do
+                ...
+              end
+
+            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
+
+              GenServer.call(pid, :message)
+        """)
+
+      :exit, error ->
+        flunk("""
+          Unhandled exit with the following error:
+
+          #{inspect(error)}
+        """)
+    after
+      # all warnings and errors are printed to the previous Kino Frame
+      # to avoid cluttering the test results display.
+      Process.sleep(10)
+      Kino.render(Kino.Markdown.new("### Test Results 
+<hr/>"))
+    end
+  end
+end
+
+ExUnit.run()
+
+# Make variables and modules defined in the test available.
+# Also allows for exploration using the output of the cell.
+# Unfortunately, this results in duplication of warnings.
+defmodule Server do
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, :green, opts)
+  end
+
+  def init(state) do
+    {:ok, state}
+  end
+end
 ```

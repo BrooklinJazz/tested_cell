@@ -7,9 +7,7 @@ defmodule TestedCell.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      {Registry, [keys: :duplicate, name: TestedCell.CellRegistry]}
-    ]
+    children = []
 
     Kino.SmartCell.register(TestedCell)
 
