@@ -67,10 +67,6 @@ defmodule Assertion do
               def handle_call(:message, _from, state) do
                 ...
               end
-
-            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
-
-              GenServer.call(pid, :message)
         """)
 
       :exit, error ->
@@ -140,10 +136,6 @@ defmodule Assertion do
               def handle_call(:message, _from, state) do
                 ...
               end
-
-            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
-
-              GenServer.call(pid, :message)
         """)
 
       :exit, error ->
@@ -219,10 +211,6 @@ defmodule Assertion do
               def handle_call(:message, _from, state) do
                 ...
               end
-
-            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
-
-              GenServer.call(pid, :message)
         """)
 
       :exit, error ->
@@ -295,10 +283,6 @@ defmodule Assertion do
               def handle_call(:message, _from, state) do
                 ...
               end
-
-            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
-
-              GenServer.call(pid, :message)
         """)
 
       :exit, error ->
@@ -363,10 +347,6 @@ defmodule Assertion do
               def handle_call(:message, _from, state) do
                 ...
               end
-
-            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
-
-              GenServer.call(pid, :message)
         """)
 
       :exit, error ->
@@ -443,10 +423,6 @@ defmodule Assertion do
               def handle_call(:message, _from, state) do
                 ...
               end
-
-            Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
-
-              GenServer.call(pid, :message)
         """)
 
       :exit, error ->

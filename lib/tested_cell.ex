@@ -128,13 +128,13 @@ defmodule TestedCell do
 
                 Likely you need to define the corresponding handler for \#\{inspect(message)\}.
 
-                Ensure you defined a `handle_call/3`, `handle_info/2`, or `handle_cast/2` or appropriate handler function.
+                Ensure you defined a handle_call/3, handle_info/2, or handle_cast/2 or appropriate handler function.
 
                   def handle_call(:message, _from, state) do
                     ...
                   end
 
-                Then ensure you call `GenServer.call/2`, `GenServer.cast/2`, or otherwise send the message correctly.
+                Also ensure you call GenServer.call/2, GenServer.cast/2, or otherwise send the message correctly.
 
                   GenServer.call(pid, :message)
             \"\"\")
